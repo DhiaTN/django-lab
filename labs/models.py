@@ -13,7 +13,8 @@ class Community(models.Model):
 
 class Member(models.Model):
     name = models.CharField(max_length=20)
-    community = models.ForeignKey("Community", null=True, blank=True)
+    community = models.ForeignKey("Community", related_name="members",
+                                  null=True, blank=True)
     events = models.ManyToManyField("Event", through="Registration",
                                     related_name="attendees", blank=True)
 
