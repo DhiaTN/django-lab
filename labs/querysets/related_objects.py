@@ -32,7 +32,7 @@ def community_per_member_non_optimised():
     members = Member.objects.all()  # lazy evaluation
     # >>> SELECT member.id, member.name, member.community_id FROM member
     for member in members:
-        # Hits the database each member to retrieve the associated Community.
+        # Hits the database for each member to retrieve the associated Community.
         print("{0} joined {1}".format(member.name, member.community.name))
         # >>> SELECT community.id, community.name FROM community WHERE community.id = member.community_id
 
@@ -41,7 +41,7 @@ def community_per_member_non_optimised():
 def community_per_member_optimised():
     """
     Django pulls all objects including ForeignKey relation data
-    in single join query:
+    in single SQL join query:
 
     >>> SELECT member.id, member.name, member.community_id, community.id,
         community.name FROM member LEFT OUTER JOIN community ON
@@ -68,6 +68,7 @@ def members_per_community_non_optimised():
     # >>> SELECT community.id, community.name FROM community
 
     for community in communities:
+        # Hits the database for each community to retrieve its associated members.
         members = community.members.all()
         # >>> SELECT member.id, member.name, member.community_id FROM member WHERE
         #     member.community_id = community.id
@@ -77,11 +78,12 @@ def members_per_community_non_optimised():
 @query_statistic
 def members_per_community_optimised():
     """
-    Django pulls all objects including related objects in 2 queries
-    and save the related objects as cached data:
+    Django pulls all objects including related objects in 2 separate
+    queries, saves the related objects as cached data and then perform
+    a join at Python level:
 
     >>> SELECT community.id, community.name FROM community
-    
+
     >>> SELECT member.id, member.name, member.community_id FROM member
         WHERE member.community_id IN (1, 2, 3)
     """
@@ -108,7 +110,7 @@ def events_per_member_non_optimised():
     for member in members:
         # Hits the database for each member to retrieve the associated events.
         events_number = member.events.count()
-        # >>> SELECT COUNT(*) AS __count FROM event" INNER JOIN registration" 
+        # >>> SELECT COUNT(*) AS __count FROM event INNER JOIN registration
         #     ON (event.id = registration.event_id)
         #     WHERE registration.member_id = member.id
         print("{0} registred in {1} events".format(
@@ -120,8 +122,9 @@ def events_per_member_non_optimised():
 @query_statistic
 def events_per_member_optimised_1():
     """
-    Django pulls all objects including related objects in 2 queries
-    and save the related objects as cached data:
+    Django pulls all objects including related objects in 2 separate
+    queries, saves the related objects as cached data and then perform
+    a join at Python level:
 
     >>> SELECT member.id, member.name, member.community_id FROM member
 

@@ -11,7 +11,10 @@ def query_statistic(func):
         queries_number = len(connection.queries) - query_count
         performed_query_list = connection.queries[-queries_number:]
         for query in performed_query_list:
-            time += float(query['time'])
+            if query['sql'] == 'BEGIN':
+                queries_number -= 1  # ignore begin transaction
+            else:
+                time += float(query['time'])
         message = "[Statistics] : {total} queries performed in {time}s."
         print(message.format(total=queries_number, time=time))
         return result

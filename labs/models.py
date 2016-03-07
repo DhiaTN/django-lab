@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator
 
 
 class Community(models.Model):
@@ -26,6 +27,8 @@ class Event(models.Model):
     name = models.CharField(max_length=20)
     start = models.DateTimeField()
     end = models.DateTimeField()
+    ticket_number = models.IntegerField(blank=True, null=True)
+    seat_number = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -38,6 +41,7 @@ class Registration(models.Model):
                               on_delete=models.CASCADE)
     ticket = models.IntegerField(default=1)
     online = models.BooleanField(max_length=1)
+    discount = models.PositiveIntegerField(validators=[MaxValueValidator(100)], default=0)
 
     def __str__(self):
         return '{member} / {event}'.format(
