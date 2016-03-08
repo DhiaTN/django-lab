@@ -8,6 +8,7 @@ class RegistrationAdmin(admin.ModelAdmin):
                     'discount', 'online', 'registered_on')
     list_filter = ('event', 'member')
 
+
 @admin.register(Community)
 class CommunityAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
