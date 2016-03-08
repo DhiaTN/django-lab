@@ -11,7 +11,7 @@ def all_communities():
     """
     communities = Community.objects.all()  # lazy evaluation
     for community in communities:
-        name = community.name
+        print(community.name)
 
 
 #############################################
@@ -33,7 +33,7 @@ def community_per_member_non_optimised():
     # >>> SELECT member.id, member.name, member.community_id FROM member
     for member in members:
         # Hits the database for each member to retrieve the associated Community.
-        print("{0} joined {1}".format(member.name, member.community.name))
+        print("{0} joined {1}".format(member, member.community.name))
         # >>> SELECT community.id, community.name FROM community WHERE community.id = member.community_id
 
 
@@ -51,7 +51,7 @@ def community_per_member_optimised():
     members = members.select_related('community')  # lazy evaluation
     for member in members:
         # Doesn't hit the database, instead uses the cached version.
-        print("{0} joined {1}".format(member.name, member.community.name))
+        print("{0} joined {1}".format(member, member.community.name))
 
 
 ## Backward relation
@@ -107,14 +107,14 @@ def events_per_member_non_optimised():
     """
     members = Member.objects.all()  # lazy evaluation
     # >>> SELECT member.id, member.name, member.community_id FROM member
-    for member in members:
+    for member in members.iterator():
         # Hits the database for each member to retrieve the associated events.
         events_number = member.events.count()
         # >>> SELECT COUNT(*) AS __count FROM event INNER JOIN registration
         #     ON (event.id = registration.event_id)
         #     WHERE registration.member_id = member.id
         print("{0} registred in {1} events".format(
-            member.name,
+            member,
             events_number
         ))
 
@@ -134,10 +134,10 @@ def events_per_member_optimised_1():
     """
 
     members = Member.objects.prefetch_related('events')
-    for member in members:
+    for member in members.iterator():
         # Doesn't hit the database, instead uses the cached version.
         print("{0} registred in {1} events".format(
-            member.name,
+            member,
             len(member.events.all())
         ))
 
@@ -158,11 +158,11 @@ def events_per_member_optimised_2():
     #     WHERE registration.member_id IN (SELECT member.id FROM member)
     registration_dict = dict()
     get = registration_dict.get
-    for registration in registrations:
+    for registration in registrations.iterator(): # iterator() saves memory
         member_id = registration.member_id
         registration_dict[member_id] = get(member_id, []) + [registration.event]
-    for member in members:
+    for member in members.iterator():
         print("{0} registred in {1} events".format(
-            member.name,
+            member,
             len(registration_dict[member_id])
         ))

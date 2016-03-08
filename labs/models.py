@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils import timezone
 from django.core.validators import MaxValueValidator
 
+from labs.settings import DATE_PATTERN
 
 class Community(models.Model):
     name = models.CharField(max_length=20)
@@ -13,14 +15,17 @@ class Community(models.Model):
 
 
 class Member(models.Model):
-    name = models.CharField(max_length=20)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    email = models.EmailField(blank=True, null=True)
+    age = models.PositiveIntegerField()
     community = models.ForeignKey("Community", related_name="members",
                                   null=True, blank=True)
     events = models.ManyToManyField("Event", through="Registration",
                                     related_name="attendees", blank=True)
 
     def __str__(self):
-        return self.name
+        return "{0} {1}".format(self.first_name, self.last_name)
 
 
 class Event(models.Model):
@@ -29,6 +34,14 @@ class Event(models.Model):
     end = models.DateTimeField()
     ticket_number = models.IntegerField(blank=True, null=True)
     seat_number = models.IntegerField(blank=True, null=True)
+
+    @property
+    def start_date(self):
+        return DATE_PATTERN.format(self.start)
+
+    @property
+    def end_date(self):
+        return DATE_PATTERN.format(self.end)
 
     def __str__(self):
         return self.name
@@ -42,10 +55,11 @@ class Registration(models.Model):
     ticket = models.IntegerField(default=1)
     online = models.BooleanField(max_length=1)
     discount = models.PositiveIntegerField(validators=[MaxValueValidator(100)], default=0)
+    registered_on = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return '{member} / {event}'.format(
-            member=self.member.name,
+            member=self.member.first_name,
             event=self.event.name
         )
 

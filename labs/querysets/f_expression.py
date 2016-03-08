@@ -64,4 +64,3 @@ def welcome_discount_optimized(discount_value=10):
     """
     registration_list = Registration.objects.filter()
     registration_list.update(discount=F('discount') + discount_value)
-
