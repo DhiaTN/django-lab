@@ -26,7 +26,7 @@ def members_matching_complex_pattern():
     member_list = Member.objects.filter(composed_pattern)
     member_email_list = member_list.values_list('email', flat=True)
     # >>> SELECT member.email FROM member WHERE (
-    #     (member.first_name LIKE \'B%\' OR member.last_name LIKE \'%H%\')
+    #     (member.first_name LIKE 'B%' OR member.last_name LIKE '%H%')
     #     AND (member.age < 25 OR member.age > 30))
     for member in member_email_list:
         print(member)
@@ -72,9 +72,9 @@ def earlier_registration_discount(event_id):
                 default=Value(0)
             ))
         # >>> UPDATE registration SET discount = CASE
-        #    WHEN registration.registered_on <= \'2016-07-15 18:00:00\' THEN 15
-        #    WHEN registration.registered_on <= \'2016-07-22 18:00:00\' THEN 10
-        #    WHEN registration.registered_on <= \'2016-07-29 18:00:00\' THEN 5
+        #    WHEN registration.registered_on <= '2016-07-15 18:00:00' THEN 15
+        #    WHEN registration.registered_on <= '2016-07-22 18:00:00' THEN 10
+        #    WHEN registration.registered_on <= '2016-07-29 18:00:00' THEN 5
         #    ELSE 0
         #    END WHERE registration.event_id = 3
     except Event.DoesNotExist as e:
