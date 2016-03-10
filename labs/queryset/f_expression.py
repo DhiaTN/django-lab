@@ -1,8 +1,8 @@
 from django.db.models import F
 from django.db import transaction
 
-from labs.models import Event, Registration
 from .utils import query_statistic
+from labs.common.models import Event, Registration
 
 
 @query_statistic

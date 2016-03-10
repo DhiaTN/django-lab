@@ -2,8 +2,8 @@ from django.db.models import Value
 from django.db import transaction
 from django.db.models.functions import Concat
 
-from labs.models import Community
-from labs.querysets.utils import query_statistic
+from .utils import query_statistic
+from labs.common.models import Community
 
 
 ## Bulk create

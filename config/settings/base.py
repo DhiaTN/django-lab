@@ -19,12 +19,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
 
-def get_env_variable(var_name):
+def get_env_variable(var_name, default=None):
+    """
+    Returns the environment variable `var_name` value if it is set.
+    """
     try:
         return os.environ[var_name]
     except KeyError:
-        error_msg = "Set the {0} environment variable".format(var_name)
-        raise ImproperlyConfigured(error_msg)
+        if default is not None:
+            return default
+        err = "The environment variable {0} is not set".format(var_name)
+        raise ImproperlyConfigured(err)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -41,7 +46,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'labs',
+    'labs.common',
+    'labs.queryset'
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -89,11 +95,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': get_env_variable('DATABASE_NAME'),
-        'USER': get_env_variable('DATABASE_USER'),
-        'PASSWORD': get_env_variable('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': get_env_variable('PGDATABASE'),
+        'USER': get_env_variable('PGUSER'),
+        'PASSWORD': get_env_variable('PGPASSWORD'),
+        'HOST': get_env_variable('PGHOST','localhost'),
+        'PORT': get_env_variable('PGPORT', '5432'),
     },
 }
 

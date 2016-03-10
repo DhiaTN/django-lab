@@ -1,5 +1,5 @@
 from .utils import query_statistic
-from labs.models import Community, Member, Event, Registration
+from labs.common.models import Community, Member, Event, Registration
 
 
 @query_statistic

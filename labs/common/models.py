@@ -2,10 +2,20 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import MaxValueValidator
 
-from labs.settings import DATE_PATTERN
+# PostgreSQL Fields
+from django.contrib.postgres.fields import ArrayField, JSONField, HStoreField
+
+from .settings import DATE_PATTERN
+from .validators import (location_schema_validator, info_schema_validator,
+                         skills_schema_validator)
+
 
 class Community(models.Model):
     name = models.CharField(max_length=20)
+    locations = ArrayField(
+        ArrayField(models.FloatField(default=0.0), size=2),
+        default=list, validators=[location_schema_validator],
+    )
 
     def __str__(self):
         return self.name
@@ -18,11 +28,18 @@ class Member(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(blank=True, null=True)
-    age = models.PositiveIntegerField()
+    age = models.PositiveIntegerField(default=20)
     community = models.ForeignKey("Community", related_name="members",
                                   null=True, blank=True)
     events = models.ManyToManyField("Event", through="Registration",
                                     related_name="attendees", blank=True)
+    skills = ArrayField(models.CharField(
+        max_length=30, blank=True, null=True),
+        default=list,
+        validators=[skills_schema_validator]
+    )
+    info = JSONField(default=dict, validators=[info_schema_validator])
+    # phone = {'mobile': '', 'work': ''} HStoreField
 
     def __str__(self):
         return "{0} {1}".format(self.first_name, self.last_name)
@@ -54,7 +71,8 @@ class Registration(models.Model):
                               on_delete=models.CASCADE)
     ticket = models.IntegerField(default=1)
     online = models.BooleanField(max_length=1)
-    discount = models.PositiveIntegerField(validators=[MaxValueValidator(100)], default=0)
+    discount = models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)], default=0)
     registered_on = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

@@ -11,12 +11,12 @@ class RegistrationAdmin(admin.ModelAdmin):
 
 @admin.register(Community)
 class CommunityAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ('id', 'name', 'locations')
 
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'community')
+    list_display = ('id', 'first_name', 'last_name', 'community', 'info')
 
 
 @admin.register(Event)

@@ -8,7 +8,7 @@ from operator import or_ as OR
 from datetime import date, timedelta
 from django.db.models import Q, When, Case, Value
 
-from labs.models import Member, Event, Registration
+from labs.common.models import Member, Event, Registration
 
 
 ## Q() Object
