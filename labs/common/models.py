@@ -3,7 +3,8 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator
 
 # PostgreSQL Fields
-from django.contrib.postgres.fields import ArrayField, JSONField, HStoreField
+from django.contrib.postgres.fields import ArrayField, HStoreField
+from django.contrib.postgres.fields.jsonb import JSONField
 
 from .settings import DATE_PATTERN
 from .validators import (location_schema_validator, info_schema_validator,
@@ -14,7 +15,9 @@ class Community(models.Model):
     name = models.CharField(max_length=20)
     locations = ArrayField(
         ArrayField(models.FloatField(default=0.0), size=2),
-        default=list, validators=[location_schema_validator],
+        default=list,
+        blank=True, null=True,
+        validators=[location_schema_validator],
     )
 
     def __str__(self):
@@ -33,13 +36,17 @@ class Member(models.Model):
                                   null=True, blank=True)
     events = models.ManyToManyField("Event", through="Registration",
                                     related_name="attendees", blank=True)
-    skills = ArrayField(models.CharField(
-        max_length=30, blank=True, null=True),
+    skills = ArrayField(
+        models.CharField(max_length=30),
         default=list,
+        blank=True, null=True,
         validators=[skills_schema_validator]
     )
-    info = JSONField(default=dict, validators=[info_schema_validator])
-    # phone = {'mobile': '', 'work': ''} HStoreField
+    info = JSONField(
+        default=dict,
+        blank=True, null=True,
+        validators=[info_schema_validator]
+    )
 
     def __str__(self):
         return "{0} {1}".format(self.first_name, self.last_name)

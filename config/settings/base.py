@@ -47,7 +47,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'labs.common',
-    'labs.queryset'
+    'labs.queryset',
 
     'django.contrib.admin',
     'django.contrib.auth',
