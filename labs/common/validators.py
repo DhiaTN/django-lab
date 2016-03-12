@@ -23,7 +23,8 @@ info_schema = {
             "type": "array",
             "uniqueItems": True,
             "items": {"type": "string", "pattern": URL_RegEx},
-            "maxItems": 3
+            "maxItems": 3,
+            "minItems": 1
         }
     },
     "additionalProperties": False

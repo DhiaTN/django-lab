@@ -98,11 +98,12 @@ DATABASES = {
         'NAME': get_env_variable('PGDATABASE'),
         'USER': get_env_variable('PGUSER'),
         'PASSWORD': get_env_variable('PGPASSWORD'),
-        'HOST': get_env_variable('PGHOST','localhost'),
+        'HOST': get_env_variable('PGHOST','127.0.0.1'),
         'PORT': get_env_variable('PGPORT', '5432'),
     },
 }
 
+PG_VERSION = '9.5'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
