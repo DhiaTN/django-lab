@@ -10,11 +10,10 @@ import _wrappers as wr
 
 DATABASES = settings.DATABASES
 PG_VERSION = settings.PG_VERSION
-
+CFG_FILE = settings.DB_SERVER_CFG_FILE
 
 class Command(BaseCommand):
     help = 'Check if the required postgres version is installed'
-    __installed = False
     __version = None
     __db_user = DATABASES['default']['USER']
     __db_name = DATABASES['default']['NAME']
@@ -24,9 +23,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
 
         parser.add_argument('-f', '--file', dest='config',
-                            default='server.cfg', help='File containing server credentials')
+                            default=CFG_FILE, help='File containing server credentials')
         parser.add_argument('-H', '--host', dest='server_ip',
-                            help='IPv4 address of DB server')
+                            default=self.__server_ip, help='IPv4 address of DB server')
         parser.add_argument('-U', '--user', dest='user',
                             default=getuser(), help="Login name of the server's user")
         parser.add_argument('-P', '--password', dest='password',
@@ -46,7 +45,6 @@ class Command(BaseCommand):
         wr.set_server_config(config_data)
         self.__version = wr.pg_version()
         if self.__version:
-            self.__installed = True
             if self.__version < PG_VERSION:
                 self.output("PostgreSQL {0} detected. Required {1}.".format(
                     self.__version, PG_VERSION), style="error")

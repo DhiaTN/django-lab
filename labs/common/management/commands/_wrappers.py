@@ -13,17 +13,9 @@ PGCONF_FILE = '/etc/postgresql/{v}/main/postgresql.conf'
 BACKUP_PATH = '/tmp'
 
 
-def apt_update():
-    sudo('apt-get update')
-
-
 def apt(cmd, *pakages):
     pakages = ' '.join(pakages)
     sudo('apt-get {cmd} {pkgs}'.format(cmd=cmd, pkgs=pakages))
-
-
-def apt_autoremove():
-    sudo('apt-get autoremove')
 
 
 def read_server_config(filepath='server.cfg'):
@@ -31,10 +23,10 @@ def read_server_config(filepath='server.cfg'):
         return json.loads(data.read())
 
 
-def set_server_config(data):
-    env.host_string = data.get('server_ip', '127.0.0.1')
-    env.user = data.get('user', getuser())
-    env.password = data.get('password', '')
+def set_server_config(json_data):
+    env.host_string = json_data.get('server_ip', '127.0.0.1')
+    env.user = json_data.get('user', getuser())
+    env.password = json_data.get('password', '')
 
 
 def pg_ctl(action, version=''):
@@ -123,3 +115,7 @@ def restore_db(db_name, db_user, password, db_server=env.host_string):
 
 def pg_dropcluster(pg_version):
     sudo("pg_dropcluster --stop {v} main".format(v=pg_version))
+
+
+def create_hstore_extenstion():
+    psql('CREATE EXTENSION IF NOT EXISTS hstore;')

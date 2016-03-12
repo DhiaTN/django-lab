@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',  # required to use hstore extension
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -104,7 +105,7 @@ DATABASES = {
 }
 
 PG_VERSION = '9.5'
-
+DB_SERVER_CFG_FILE = os.path.join(ROOT_DIR, 'config/server.cfg')
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
