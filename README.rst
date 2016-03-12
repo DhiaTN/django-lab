@@ -10,7 +10,7 @@
    :target: https://raw.githubusercontent.com/DhiaTN/djangolab/master/LICENSE
    :alt: Project Licence
 
- .. image:: https://img.shields.io/requires/github/celery/celery.svg?style=flat
+ .. image:: https://requires.io/github/DhiaTN/djangolab/requirements.svg?branch=master
    :target: https://requires.io/github/DhiaTN/djangolab/requirements/?branch=master
    :alt: Requirements Status
 

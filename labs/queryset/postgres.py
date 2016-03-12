@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from labs.common.models import Member
 
 
@@ -15,7 +17,10 @@ def has_ruby_skills():
 def has_all_skills_within_requirement(requirement=[]):
     if not requirement:
         requirement = ['python', 'django', 'js', 'angular', 'ruby']
-    member_list = Member.objects.filter(skills__contained_by=requirement)
+    member_list = Member.objects.filter(
+        skills__contained_by=requirement,
+        skills__len__gte=1
+    )
     for member in member_list:
         skills = ', '.join(member.skills)
         print("{0} is familiar with : {1}".format(member, skills))
@@ -48,5 +53,28 @@ def python_as_first_skill():
 ###############
 
 
+def has_website():
+    member_list = Member.objects.filter(
+        Q(info__has_key='websites'),
+        ~Q(info__websites__exact=[])
+    )
+    for member in member_list:
+        webistes = ', '.join(member.info.get('websites'))
+        print("{0} has {1} websites: {2}".format(
+            member,
+            len(member.info.get('websites')),
+            websites
+        ))
+
+
+def can_speak_french():
+    members_number = Member.objects.filter(
+        Q(info__languages__contains=[{'name': 'French'}]) |
+        Q(info__languages__contains=[{'name': 'french'}])
+    ).count()
+    print("{0} members speak French.")
+ 
+
 # HStore Field
 ###############
+

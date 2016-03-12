@@ -1,4 +1,5 @@
 from jsonschema import validate as validate_schema
+from jsonschema.exceptions import ValidationError as Draft4ValidationError
 from django.core.exceptions import ValidationError
 
 from .settings import URL_RegEx
@@ -24,10 +25,8 @@ info_schema = {
             "uniqueItems": True,
             "items": {"type": "string", "pattern": URL_RegEx},
             "maxItems": 3,
-            "minItems": 1
         }
-    },
-    "additionalProperties": False
+    }
 }
 
 skills_schema = {
@@ -44,21 +43,21 @@ location_schema = {
 def info_schema_validator(data):
     try:
         validate_schema(data, info_schema)
-    except ValidationError as e:
+    except Draft4ValidationError as e:
         raise ValidationError(e.message)
 
 
 def skills_schema_validator(data):
     try:
         validate_schema(data, skills_schema)
-    except ValidationError as e:
+    except Draft4ValidationError as e:
         raise ValidationError(e.message)
 
 
 def location_schema_validator(data):
     try:
         validate_schema(data, location_schema)
-    except ValidationError as e:
+    except Draft4ValidationError as e:
         raise ValidationError(e.message)
 
 
@@ -79,5 +78,5 @@ def location_schema_validator(data):
 #     def __call__(self, data):
 #         try:
 #             validate_Schema(data, self._schema)
-#         except Exception as e:
+#         except Draft4ValidationError as e:
 #             raise ValidationError(self._message)
