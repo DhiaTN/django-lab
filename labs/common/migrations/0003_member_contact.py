@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import django.contrib.postgres.fields.hstore
-# from django.contrib.postgres.operations import HStoreExtension
+from django.contrib.postgres.fields import hstore
+from django.contrib.postgres.operations import HStoreExtension
 
 
 class Migration(migrations.Migration):
@@ -14,13 +14,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # HStoreExtension(), # Db user must be superuser to create this
-        # extension. It's replaced with the management command
-        # `add_hstore_extension`, run: python manage.py add_hstore_extension
+        HStoreExtension(),
         migrations.AddField(
             model_name='member',
             name='contact',
-            field=django.contrib.postgres.fields.hstore.HStoreField(
-                blank=True, default=dict, null=True),
+            field=hstore.HStoreField(blank=True, null=True),
         ),
     ]

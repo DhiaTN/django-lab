@@ -8,7 +8,7 @@ import _wrappers as wr
 
 CFG_FILE = settings.DB_SERVER_CFG_FILE
 SERVER_IP = settings.DATABASES['default']['HOST']
-
+DB_USER = settings.DATABASES['default']['USER']
 
 class Command(BaseCommand):
     help = 'Setup the hstore extension in PostgreSQL'
@@ -32,6 +32,7 @@ class Command(BaseCommand):
         else:
             raise CommandError("Server credentials are wrong or missing")
         wr.set_server_config(config_data)
+        wr.upgrade_to_superuser(DB_USER)
         wr.create_hstore_extenstion()
         self.output("HStore extension successfully created.", style="success")
 

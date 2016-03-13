@@ -47,7 +47,7 @@ class Member(models.Model):
         blank=True, null=True,
         validators=[info_schema_validator]
     )
-    contact = HStoreField(default=dict, blank=True, null=True)
+    contact = HStoreField(blank=True, null=True)
 
     def __str__(self):
         return "{0} {1}".format(self.first_name, self.last_name)
@@ -58,6 +58,7 @@ class Event(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     ticket_number = models.IntegerField(blank=True, null=True)
+    ticket_price = models.IntegerField(blank=True, null=True)
     seat_number = models.IntegerField(blank=True, null=True)
 
     @property

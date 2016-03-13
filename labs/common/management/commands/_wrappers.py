@@ -119,3 +119,7 @@ def pg_dropcluster(pg_version):
 
 def create_hstore_extenstion():
     psql('CREATE EXTENSION IF NOT EXISTS hstore;')
+
+
+def upgrade_to_superuser(db_user):
+    psql('ALTER USER {u} WITH SUPERUSER;'.format(u=db_user))
