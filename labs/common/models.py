@@ -6,12 +6,13 @@ from django.core.validators import MaxValueValidator
 from django.contrib.postgres.fields import ArrayField, HStoreField
 from django.contrib.postgres.fields.jsonb import JSONField
 
+from .mixins import ModelMixin
 from .settings import DATE_PATTERN
 from .validators import (location_schema_validator, info_schema_validator,
                          skills_schema_validator)
 
 
-class Community(models.Model):
+class Community(ModelMixin, models.Model):
     name = models.CharField(max_length=20)
     locations = ArrayField(
         ArrayField(models.FloatField(default=0.0), size=2),
@@ -27,7 +28,7 @@ class Community(models.Model):
         verbose_name_plural = 'Communities'
 
 
-class Member(models.Model):
+class Member(ModelMixin, models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(blank=True, null=True)
@@ -53,7 +54,7 @@ class Member(models.Model):
         return "{0} {1}".format(self.first_name, self.last_name)
 
 
-class Event(models.Model):
+class Event(ModelMixin, models.Model):
     name = models.CharField(max_length=20)
     start = models.DateTimeField()
     end = models.DateTimeField()
@@ -73,7 +74,7 @@ class Event(models.Model):
         return self.name
 
 
-class Registration(models.Model):
+class Registration(ModelMixin, models.Model):
     member = models.ForeignKey("Member", related_name="registrations",
                                on_delete=models.CASCADE)
     event = models.ForeignKey("Event", related_name="registrations",
