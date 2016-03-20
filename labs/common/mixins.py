@@ -34,7 +34,6 @@ class ModelMixin(Model):
             if field.is_relation:
                 if hasattr(field_content, 'values'):
                     field_content = field_content.values()
-
             full_data.update({field.attname: field_content})
         return full_data
 

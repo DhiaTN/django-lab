@@ -1,0 +1,12 @@
+version: '2.0'
+services:
+  web:
+    environment:
+      - SECRET_KEY=k3jghf1jk%$JH^1GJH5@YUTR@!MBMB<5=7DXXG)JHSX=
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASSWORD=''
+      - PGHOST=db
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"

@@ -1,0 +1,15 @@
+version: '2.0'
+services:
+  db:
+    container_name: db_server
+    image: postgres
+  web:
+    container_name: djangolab
+    build: .
+    volumes:
+      - .:/web/src
+    extends:
+      file: config/docker/web.yml
+      service: web
+    links:
+      - db

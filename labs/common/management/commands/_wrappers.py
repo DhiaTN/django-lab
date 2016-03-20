@@ -77,7 +77,7 @@ def upgrade_pg_pkg(_from, _to):
 
 def setup_db(db_name, db_user, password):
     psql('CREATE DATABASE {db}'.format(db=db_name))
-    psql('CREATE USER {u} WITH PASSWORD \'{p}\''.format(u=db_user, p=password))
+    psql('CREATE USER {u} WITH LOGIN ENCRYPTED PASSWORD \'{p}\' CREATEDB'.format(u=db_user, p=password))
     psql('GRANT ALL PRIVILEGES ON DATABASE {db} TO {u}'.format(
         db=db_name, u=db_user))
     set_connection_parameter(db_user=db_user)
