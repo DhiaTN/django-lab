@@ -60,23 +60,3 @@ def location_schema_validator(data):
     except Draft4ValidationError as e:
         raise ValidationError(e.message)
 
-
-# class BaseSchemaValidator(object):
-#     _message = 'Invalid schema.'
-#     _code = 778
-#     _schema = dict()
-#
-#     def __init__(self, message=None, schema=None, code=None):
-#         if message is not None:
-#             self._message = message
-#         if code is not None:
-#             self._code = code
-#         if schema is not None:
-#             self._schema = schema
-#         pass
-#
-#     def __call__(self, data):
-#         try:
-#             validate_Schema(data, self._schema)
-#         except Draft4ValidationError as e:
-#             raise ValidationError(self._message)
