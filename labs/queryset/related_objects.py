@@ -1,4 +1,15 @@
-from .utils import query_statistic
+"""
+Related Objects
+------------------
+
+* select_related: works by creating a SQL join and including the fields of the related object in the SELECT statement. For this reason, select_related gets the related objects in the same database query. However, to avoid the much larger result set that would result from joining across a 'many' relationship, select_related is limited to single-valued relationships - foreign key and one-to-one.
+
+* prefetch_related: on the other hand, does a separate lookup for each relationship, and does the 'joining' in Python. This allows it to pre-fetch many-to-many and many-to-one objects, which cannot be done using select_related, in addition to the foreign key and one-to-one relationships that are supported by select_related. It also supports pre-fetching of GenericRelation and GenericForeignKey.
+
+source:(https://docs.djangoproject.com/en/1.9/ref/models/querysets/#django.db.models.query.QuerySet.prefetch_related)
+"""
+
+from labs.common.decorators import query_statistic
 from labs.common.models import Community, Member, Event, Registration
 
 

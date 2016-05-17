@@ -1,7 +1,7 @@
 from django.db.models import F
 from django.db import transaction
 
-from .utils import query_statistic
+from labs.common.decorators import query_statistic
 from labs.common.models import Event, Registration
 
 
