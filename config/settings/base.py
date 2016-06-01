@@ -38,7 +38,7 @@ def get_env_variable(var_name, default=None):
 SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -106,6 +106,7 @@ DATABASES = {
 
 PG_VERSION = '9.5'
 DB_SERVER_CFG_FILE = os.path.join(ROOT_DIR, 'config/server.cfg')
+
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
@@ -144,3 +145,59 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
+
+
+# Logging
+LOG_DIR =  os.path.join(ROOT_DIR, 'logs')
+LOGGING_LEVEL = 'INFO'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s - %(levelname)s - %(name)s - %(funcName)s - %(message)s'
+        },
+        'sql': {
+            '()': 'config.log.formatters.SQLFormatter',
+            'format': '[%(duration).3f] %(statement)s',
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+            'formatter': 'default'
+        },
+        'file_error_handler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'default',
+            'filename': os.path.join(LOG_DIR, 'error.log')
+        },
+        'file_debug_handler': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'default',
+            'filename': os.path.join(LOG_DIR, 'debug.log')
+        },
+        'sql': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+            'formatter': 'sql'
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['sql'],
+            'level': LOGGING_LEVEL,
+            'propagate': False
+        },
+        'django.db.backends.schema': {
+            'handlers': ['console'],
+            'level': LOGGING_LEVEL,
+            'propagate': False
+        },
+    }
+}
+
+## TODO https://markusholtermann.eu/2016/01/syntax-highlighting-for-djangos-sql-query-logging/
